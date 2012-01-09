@@ -4,31 +4,34 @@
  * Implements hook_field_schema()
  */
 function field_references_field_schema($field) {
-  $columns = array(
-    'name' => array(
-      'type' => 'varchar',
-      'length' => '100',
-      'not null' => FALSE,
-    ),
-    'phone' => array(
-      'type' => 'varchar',
-      'length' => '50',
-      'not null' => FALSE,
-    ),
-    'relation' => array(
-      'type' => 'varchar',
-      'length' => '100',
-      'not null' => FALSE,
-    ),
-    'email' => array(
-      'type' => 'varchar',
-      'length' => '100',
-      'not null' => FALSE,
-    ),
-  );
+  switch($field['type']) {
+    case 'work_references':
+      $columns = array(
+        'name' => array(
+          'type' => 'varchar',
+          'length' => '100',
+          'not null' => FALSE,
+        ),
+        'phone' => array(
+          'type' => 'varchar',
+          'length' => '50',
+          'not null' => FALSE,
+        ),
+        'relation' => array(
+          'type' => 'varchar',
+          'length' => '100',
+          'not null' => FALSE,
+        ),
+        'email' => array(
+          'type' => 'varchar',
+          'length' => '100',
+          'not null' => FALSE,
+        ),
+      );
+      break;
+  }
 
   return array(
     'columns' => $columns,
-    //'indexes' => $indexes,
   );
 }

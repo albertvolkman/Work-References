@@ -1,67 +1,92 @@
 <?php
 
-/**
- * Implements hook_field_info()
- */
-function fields_references_field_info() {
+function field_references_field_info() {
   return array(
     'work_references' => array(
       'label' => t('Work References'),
+      'description' => t("This field stores employee's work references"),
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'work_references',
-      'default_formatter' => 'work_references',
+      'default_formatter' => 'work_references', // This doesn't *have* to be the same name as default_widget's value, this is only coincidence
     ),
   );
 }
 
-/**
- * Implements hook_field_validate()
- */
-function fields_references_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+function field_references_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     // ...
   }
 }
 
-/**
- * Implements hook_field_is_empty()
- */
-function fields_references_field_is_empty($item, $field) {
+function field_references_field_is_empty($item, $field) {
   $temp = array_keys($field['columns']);
   $key = array_shift($temp);
   return empty($item[$key]);
 }
 
-/**
- * Implements hook_field_widget_info()
- */
-function fields_references_field_widget_info() {
+function field_references_field_widget_info() {
   return array(
     'work_references' => array(
       'label' => t('Work References'),
       'field types' => array('work_references'),
-    )
+    ),
   );
 }
 
-/**
- * Implements hook_field_widget_form()
- */
-function fields_references_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $fields = array(
-    'name' => t('Name'),
-    'phone' => t('Phone'),
-    'relation' => t('Relation'),
-    'email' => t('Email'),
-  );
+function field_references_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  switch ($instance['widget']['type']) {
+    case 'work_references':
+      $settings = $form_state['field'][$instance['field_name']][$langcode]['field']['settings'];
+ 
+      $fields = array(
+        'name' => t('Name'),
+        'phone' => t('Phone'),
+        'relation' => t('Relation'),
+        'email' => t('Email'),
+      );
+ 
+      $abilities = (!empty($field['settings']['references'])) ? explode("\n", $field['settings']['references']) : array();
+ 
+      foreach ($fields as $key => $label) {
+        $value = isset($items[$delta][$key]) ? $items[$delta][$key] : '';
+ 
+        $element[$key] = array(
+          '#type' => 'textfield',
+          '#size' => 30,
+          '#maxlength' => 30,
+          '#title' => $label,
+          '#default_value' => $value,
+        );
+      }
+      break;
+  }
+  return $element;
+}
 
-  foreach ($fields as $key => $label) {
-    $element[$key] = array(
-      '#type' => 'textfield',
-      '#size' => 30,
-      '#title' => $label,
-      '#default_value' => $value,
-    );
+function field_references_field_formatter_info() {
+  return array(
+    'work_references' => array(
+      'label' => t('Work References'),
+      'field types' => array('work_references'),
+    ),
+  );
+}
+
+function field_references_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+ 
+  switch ($display['type']) {
+    case 'dnd_fields_ability':
+      $headers = array(
+        t('Name'),
+        t('Phone'),
+        t('Relation'),
+        t('Email'),
+      );
+ 
+      $element[0]['#theme'] = 'table';
+      $element[0]['#data'] = array('header' => $headers, 'rows' => $items);
+      break;
   }
   return $element;
 }
