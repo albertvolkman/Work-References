@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * Implements hook_field_info()
+ */
+function fields_references_field_info() {
+  return array(
+    'work_references' => array(
+      'label' => t('Work References'),
+      'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
+      'default_widget' => 'work_references',
+      'default_formatter' => 'work_references',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_validate()
+ */
+function fields_references_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    // ...
+  }
+}
+
+/**
+ * Implements hook_field_is_empty()
+ */
+function fields_references_field_is_empty($item, $field) {
+  $temp = array_keys($field['columns']);
+  $key = array_shift($temp);
+  return empty($item[$key]);
+}
+
+/**
+ * Implements hook_field_widget_info()
+ */
+function fields_references_field_widget_info() {
+  return array(
+    'work_references' => array(
+      'label' => t('Work References'),
+      'field types' => array('work_references'),
+    )
+  );
+}
+
+/**
+ * Implements hook_field_widget_form()
+ */
+function fields_references_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $element['test'] = array(
+    '#type' => 'textfield',
+  );
+
+  return $element;
+}

@@ -1,0 +1,6 @@
+name = References Compound Field
+description = References Compound Field
+core = 7.x
+
+files[] = field_references.install
+files[] = field_references.module
