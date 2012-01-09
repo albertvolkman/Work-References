@@ -48,9 +48,20 @@ function fields_references_field_widget_info() {
  * Implements hook_field_widget_form()
  */
 function fields_references_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $element['test'] = array(
-    '#type' => 'textfield',
+  $fields = array(
+    'name' => t('Name'),
+    'phone' => t('Phone'),
+    'relation' => t('Relation'),
+    'email' => t('Email'),
   );
 
+  foreach ($fields as $key => $label) {
+    $element[$key] = array(
+      '#type' => 'textfield',
+      '#size' => 30,
+      '#title' => $label,
+      '#default_value' => $value,
+    );
+  }
   return $element;
 }
